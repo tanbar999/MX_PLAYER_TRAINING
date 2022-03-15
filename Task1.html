@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Task1</title>
+  </head>
+  <body>
+    <div>
+      <h1>WEEK1</h1>
+    </div>
+    <script>
+      //Task 1 pattern
+      document.write("<strong>Task 1</strong>");
+      document.write("<br/>");
+      for (var i = 1; i <= 4; i++) {
+        for (var j = i; j <= 4; j++) {
+          document.write("*");
+        }
+        document.write("<br />");
+      }
+
+      for (var i = 2; i <= 4; i++) {
+        for (var j = 1; j <= i; j++) {
+          document.write("*");
+        }
+        document.write("<br>");
+      }
+
+      document.write("<br/>");
+      document.write("<strong>Task 2</strong>");
+      document.write("<br/>");
+
+      var oddarray = [];
+      for (i = 1; i <= 20; i++) {
+        if (i % 2 != 0) oddarray.push(i);
+      }
+      document.write(oddarray);
+
+      document.write("<br />");
+      document.write("<br />");
+      document.write("<strong>Task 3</strong>");
+      document.write("<br/>");
+      function banking() {
+        this.balance = 0;
+        this.openAccount = function (currbalance) {
+          if (currbalance > 0) {
+            this.balance = currbalance;
+            document.write(
+              "OPEN ACCOUNT : Account has been opened,current balance is : " +
+                currbalance
+            );
+          } else {
+            console.log("OPEN ACCOUNT :Please Enter balance above 0");
+          }
+        };
+
+        this.withdraw = function (Amt) {
+          if (Amt > this.balance)
+            document.write(
+              "WITHDRAW : You dont have Enough money in the account"
+            );
+          else {
+            this.balance = this.balance - Amt;
+            document.write(
+              "WITHDRAW : Amount Withdrawn Successfull, Updated Balance is :" +
+                this.balance
+            );
+          }
+        };
+
+        this.deposit = function (Amt) {
+          if (Amt > 0) {
+            this.balance = this.balance + Amt;
+            document.write("DEPSOIT : Amount deposited : " + Amt);
+            document.write("<br>");
+            document.write(
+              "DEPOSIT : Now your Updated balance is " + this.balance
+            );
+          } else {
+            console.log("DEPOSIT : Please enter amount greater than zero");
+          }
+        };
+      }
+
+      var acc = new banking();
+      acc.openAccount(20000);
+      document.write("<br>");
+      acc.withdraw(40000);
+      document.write("<br>");
+      acc.withdraw(10000);
+      document.write("<br>");
+      acc.deposit(20000);
+      document.write("<br>");
+      acc.withdraw(40000);
+      document.write("<br>");
+
+      document.write("<br>");
+      document.write("<strong>Task 4</strong>");
+      document.write("<br>");
+      function deleteTask() {
+        this.taskArray = ["Jumping", "Running", "Dancing", "Singing"];
+        document.write(this.taskArray);
+
+        this.delete = function (index) {
+          document.write("<br>");
+
+          this.taskArray.splice(index, 1);
+          document.write("<br>");
+          document.write("**After Deleteing**");
+          document.write("<br>");
+          document.write(this.taskArray);
+        };
+      }
+
+      var task = new deleteTask();
+      task.delete(1);
+    </script>
+  </body>
+</html>
