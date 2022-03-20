@@ -1,0 +1,21 @@
+.baseColor {
+  background-color: #b388ff;
+}
+
+.center_text {
+  font-family: "Inspiration", cursive;
+  font-size: 100px;
+}
+
+.card_text {
+  font-family: "Hurricane", cursive;
+  font-size: 40px;
+}
+
+.header {
+  padding: 10px;
+}
+
+.card {
+  margin: 20px;
+}
