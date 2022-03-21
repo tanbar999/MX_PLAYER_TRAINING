@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <!-- BOOTSTRAP CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+
+    <!-- GOOGLE FONTS API -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ramaraja&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS import -->
+    <link rel="stylesheet" href="../CSS/index.css" />
+
+    <title>EMI CALCULATOR</title>
+  </head>
+
+  <body class="baseColor">
+    <div>
+      <div>
+        <h1 class="text-center header" style="margin: 30px">EMI CALCULATOR</h1>
+      </div>
+      <div class="card" style="margin: 8px">
+        <div class="input-group mx-auto" style="margin: 8px">
+          <span class="input-group-text">$</span>
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Loan Amount"
+            id="Loan_amount"
+          />
+        </div>
+        <div class="input-group mx-auto" style="margin: 8px">
+          <span class="input-group-text">%</span>
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Intereset Rate"
+            id="Interest_rate"
+          />
+        </div>
+        <div class="input-group mx-auto" style="margin: 8px">
+          <span class="input-group-text">Yr</span>
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Tenure(in Years)"
+            id="Tenure"
+          />
+        </div>
+        <div class="mx-auto" style="margin: 10px">
+          <button
+            type="button"
+            class="btn btn-warning mx-auto"
+            style="padding: 5px"
+            onclick="AddTotalAmountTable()"
+          >
+            Total Amount
+          </button>
+          <button
+            type="button"
+            class="btn btn-warning mx-auto"
+            style="padding: 5px"
+            onclick="YearWiseAmount()"
+          >
+            Year Wise Amount
+          </button>
+          <button
+            type="button"
+            class="btn btn-warning mx-auto"
+            style="padding: 5px"
+            onclick="MonthlyWiseAmount()"
+          >
+            Monthly Wise
+          </button>
+        </div>
+        <div id="ResultHere" style="padding: 20px"></div>
+      </div>
+    </div>
+    <!-- JAVASCRIPT FOR EMI CALCULATOR -->
+    <script>
+      function checkIfInputIsValid(loanAmount, interestRate, tenure) {
+        if (loanAmount === "" || interestRate === "" || tenure === "") {
+          alert("Please enter valid inputs.");
+          return false;
+        } else {
+          return true;
+        }
+      }
+
+      function AddTotalAmountTable() {
+        var loanAmount = document.getElementById("Loan_amount").value;
+        var interestRate = document.getElementById("Interest_rate").value;
+        var tenure = document.getElementById("Tenure").value;
+
+        if (checkIfInputIsValid(loanAmount, interestRate, tenure)) {
+          loanAmount = parseInt(loanAmount);
+          interestRate = parseInt(interestRate);
+          tenure = parseInt(tenure);
+
+          var CI = calculateCompoundInterest(
+            loanAmount,
+            interestRate,
+            tenure
+          ).toFixed(2);
+
+          var tag = document.createElement("p");
+          var text = document.createTextNode(
+            `Total Amount to be paid is ${CI}`
+          );
+
+          tag.appendChild(text);
+
+          const value = document.getElementById("ResultHere");
+          if (value.firstElementChild != null) {
+            value.removeChild(value.firstElementChild);
+          }
+
+          console.log(CI);
+
+          document.getElementById("ResultHere").appendChild(tag);
+        }
+      }
+
+      function YearWiseAmount() {
+        var loanAmount = document.getElementById("Loan_amount").value;
+        var interestRate = document.getElementById("Interest_rate").value;
+        var tenure = document.getElementById("Tenure").value;
+
+        if (checkIfInputIsValid(loanAmount, interestRate, tenure)) {
+          loanAmount = parseInt(loanAmount);
+          interestRate = parseInt(interestRate);
+          tenure = parseInt(tenure);
+
+          var CI = calculateCompoundInterest(
+            loanAmount,
+            interestRate,
+            tenure
+          ).toFixed(2);
+
+          const value = document.getElementById("ResultHere");
+          if (value.firstElementChild != null) {
+            value.removeChild(value.firstElementChild);
+          }
+
+          let table = document.createElement("table");
+          table.classList.add("table");
+          table.classList.add("table-light");
+          let thead = document.createElement("thead");
+          let tbody = document.createElement("tbody");
+
+          table.appendChild(thead);
+          table.appendChild(tbody);
+
+          // Adding the entire table to the body tag
+          document.getElementById("ResultHere").appendChild(table);
+
+          let row_1 = document.createElement("tr");
+          let heading_1 = document.createElement("th");
+          heading_1.innerHTML = "Sr. No.";
+          let heading_2 = document.createElement("th");
+          heading_2.innerHTML = "Yearly Payment";
+          let heading_3 = document.createElement("th");
+          heading_3.innerHTML = "Interest Occured";
+
+          row_1.appendChild(heading_1);
+          row_1.appendChild(heading_2);
+          row_1.appendChild(heading_3);
+          thead.appendChild(row_1);
+
+          for (var i = 0; i < tenure; i++) {
+            let row_2 = document.createElement("tr");
+            let row_2_data_1 = document.createElement("td");
+            row_2_data_1.innerHTML = i + 1;
+            let row_2_data_2 = document.createElement("td");
+            row_2_data_2.innerHTML = (CI / tenure).toFixed(2);
+            let row_2_data_3 = document.createElement("td");
+            row_2_data_3.innerHTML = (
+              CI / tenure -
+              loanAmount / tenure
+            ).toFixed(2);
+
+            row_2.appendChild(row_2_data_1);
+            row_2.appendChild(row_2_data_2);
+            row_2.appendChild(row_2_data_3);
+            tbody.appendChild(row_2);
+          }
+        }
+      }
+
+      function MonthlyWiseAmount() {
+        var loanAmount = document.getElementById("Loan_amount").value;
+        var interestRate = document.getElementById("Interest_rate").value;
+        var tenure = document.getElementById("Tenure").value;
+
+        if (checkIfInputIsValid(loanAmount, interestRate, tenure)) {
+          loanAmount = parseInt(loanAmount);
+          interestRate = parseInt(interestRate);
+          tenure = parseInt(tenure);
+
+          var CI = calculateCompoundInterest(
+            loanAmount,
+            interestRate,
+            tenure
+          ).toFixed(2);
+
+          const value = document.getElementById("ResultHere");
+          if (value.firstElementChild != null) {
+            value.removeChild(value.firstElementChild);
+          }
+
+          let table = document.createElement("table");
+          table.classList.add("table");
+          table.classList.add("table-light");
+          let thead = document.createElement("thead");
+          let tbody = document.createElement("tbody");
+
+          table.appendChild(thead);
+          table.appendChild(tbody);
+
+          // Adding the entire table to the body tag
+          document.getElementById("ResultHere").appendChild(table);
+
+          let row_1 = document.createElement("tr");
+          let heading_1 = document.createElement("th");
+          heading_1.innerHTML = "Sr. No.";
+          let heading_2 = document.createElement("th");
+          heading_2.innerHTML = "Monthly Payment";
+          let heading_3 = document.createElement("th");
+          heading_3.innerHTML = "Interest Occured";
+
+          row_1.appendChild(heading_1);
+          row_1.appendChild(heading_2);
+          row_1.appendChild(heading_3);
+          thead.appendChild(row_1);
+
+          for (var i = 0; i < tenure * 12; i++) {
+            let row_2 = document.createElement("tr");
+            let row_2_data_1 = document.createElement("td");
+            row_2_data_1.innerHTML = i + 1;
+            let row_2_data_2 = document.createElement("td");
+            row_2_data_2.innerHTML = (CI / tenure).toFixed(2);
+            let row_2_data_3 = document.createElement("td");
+            row_2_data_3.innerHTML = (
+              CI / (tenure * 12) -
+              loanAmount / (tenure * 12)
+            ).toFixed(2);
+
+            row_2.appendChild(row_2_data_1);
+            row_2.appendChild(row_2_data_2);
+            row_2.appendChild(row_2_data_3);
+            tbody.appendChild(row_2);
+          }
+        }
+      }
+
+      function calculateCompoundInterest(loanAmount, interestRate, tenure) {
+        const rate = interestRate / 100;
+        let val = Math.pow(1 + rate / 12, tenure * 12);
+        return loanAmount * val;
+      }
+
+      function calculateCompoundInterest(loanAmount, interestRate, tenure) {
+        const rate = interestRate / 100;
+        let val = Math.pow(1 + rate / 12, tenure * 12);
+        return loanAmount * val;
+      }
+
+      function generateTable(table, data) {
+        for (let element of data) {
+          let row = table.insertRow();
+          for (key in element) {
+            let cell = row.insertCell();
+            let text = document.createTextNode(element[key]);
+            cell.appendChild(text);
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
